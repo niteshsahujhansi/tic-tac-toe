@@ -2,9 +2,9 @@
 
 import random
 
-# tic tac toe game methods inside the class TicTacToe 
+# tic tac toe game methods inside the class TicTacToe
 
-class TicTacToe:
+class TicTacToe :
     
     def create_board(self) :
 
@@ -31,6 +31,13 @@ class TicTacToe:
                 print(item, end=' ')
             print()
     
+    def is_pos_empty(self, row, col) :
+
+        ''' return true only if given positing is not occupied '''
+
+        if self.board [row] [col] == '-':
+            return True 
+
     def is_player_win(self, player) :
 
         ''' this is the most important method of this game  '''
@@ -101,68 +108,86 @@ class TicTacToe:
         #     player = 'X'
         
         return 'O' if player == 'X' else 'X'
-        
 
+    def start(self) :
 
-class main :
+        ''' this is main method to start the game '''
 
-    ''' this is main Function '''
+        # create board 
+        self.create_board() 
 
-    # create object of TicTacToe class
-    tictactoe = TicTacToe()
+        # show board
+        self.show_board()
+
+        # first turn is randomly chosen
+        player = random.choice('X''O')
     
-    # create board 
-    tictactoe.create_board() 
+        while True:
 
-    # show board
-    tictactoe.show_board()
+            ''' infinite loop until one win the match or board is completely filled '''
 
-    # first turn is randomly chosen
-    player = random.choice('X''O')
- 
-    while True:
-
-        ''' infinite loop until one win the match or board is completely filled '''
-
-        # shows which player has the turn
-        
-        print()
-        print(f'player {player} turn')
-
-        # taking input of row and column (3 ways are shown)
-
-        # row = int(input('Enter row: '))
-        # col = int(input('Enter Col: '))
-
-        # using split map list function
-        row, col = list(map(int, input('Enter (row, col) position: ').split()))
-
-        # using list comprehension 
-        # row, col = [int(x) for x in input("Enter two values: ").split()]
-
-        # fix the move played by the player 
-        tictactoe.board[row-1][col-1] = player 
-
-        # shows updated board after the player's move
-        tictactoe.show_board()
-
-        # check for winning conditions if any condition met (true) execution comes inside this function
-        # then print winning statement and terminate the main while loop 
-        if tictactoe.is_player_win(player) :
+            # shows which player has the turn
+            
             print()
-            print(player, 'win the match.')
-            break            
-        
-        # if no one win, then execution check for this function
-        # if board is filled completely than print draw statment
-        if tictactoe.is_board_full():
-            print()
-            print('Match Draw!')
-            break 
-        
-        # if execution is not terminated by the above two functions
-        # then the turn of the playerd is swaped (changed)
-        player = tictactoe.swap_player_turn(player)
-   
+            print(f'player {player} turn')
 
-main() # calling main class, exicution starts from here
+            # taking input of row and column (3 ways are shown)
+
+            # row = int(input('Enter row: '))
+            # col = int(input('Enter Col: '))        
+            
+            # using split map list function
+            row, col = list(map(int, input('Enter (row, col) position: ').split()))
+
+            # using list comprehension 
+            # row, col = [int(x) for x in input("Enter two values: ").split()]
+
+            # check if entered place is empty only then fix the move played by the player
+            if self.is_pos_empty(row-1, col-1):
+                self.board[row-1][col-1] = player
+            else:
+                print()
+                print('Entered position is already occupied, please Choose empty position')
+                continue 
+
+            # fix the move played by the player 
+            # tictactoe.board[row-1][col-1] = player 
+
+            # shows updated board after the player's move
+            self.show_board()
+
+            # check for winning conditions if any condition met (true) execution comes inside this function
+            # then print winning statement and terminate the main while loop 
+            if self.is_player_win(player) :
+                print()
+                print(player, 'win the match.')
+                break            
+            
+            # if no one win, then execution check for this function
+            # if board is filled completely than print draw statment
+            if self.is_board_full():
+                print()
+                print('Match Draw!')
+                break 
+            
+            # if execution is not terminated by the above two functions
+            # then the turn of the playerd is swaped (changed)
+            player = self.swap_player_turn(player)
+
+    def continue_exit(self) :
+
+        ''' this function ask user to play again or exit '''
+
+        while True:
+            answer = input('Do you want to continue? (y/n): ')
+            if answer.lower().startswith("y"):
+                tictactoe.start()
+            elif answer.lower().startswith("n"):
+                exit()
+
+# create object of TicTacToe class
+tictactoe = TicTacToe()
+# start the game
+tictactoe.start()
+# ask user to play again or exit 
+tictactoe.continue_exit()
